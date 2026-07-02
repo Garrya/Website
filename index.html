@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Habit Goals — Трекер привычек и целей</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/inter@5.0.18/index.css">
+  <link rel="stylesheet" href="styles.css">
+  <script src="script.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-mark">HG</div>
+      <span>Habit Goals</span>
+    </div>
+    <nav class="nav-links">
+      <a href="#dashboard" class="nav-link active" data-nav="dashboard">Главная</a>
+      <a href="#goals" class="nav-link" data-nav="goals">Цели</a>
+      <a href="#habits" class="nav-link" data-nav="habits">Привычки</a>
+      <a href="#analytics" class="nav-link" data-nav="analytics">Прогресс</a>
+      <a href="#profile" class="nav-link" data-nav="profile">Профиль</a>
+      <a href="#admin" class="nav-link" data-nav="admin" style="display:none;">Админ</a>
+    </nav>
+    <div class="nav-actions">
+      <button class="icon-btn" id="themeToggle" aria-label="Тема">🌙</button>
+      <button class="btn btn-ghost btn-sm" id="authBtn">Войти</button>
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- DASHBOARD -->
+    <section id="view-dashboard" class="view active">
+      <div class="hero">
+        <div>
+          <div class="badge badge-warning" style="margin-bottom:10px;">🚀 Добро пожаловать</div>
+          <h1>Управляйте целями.<br>Формируйте привычки.</h1>
+          <p>Отслеживайте прогресс, поддерживайте серии и достигайте результатов каждый день. Ваш персональный ассистент продуктивности.</p>
+          <div class="hero-actions">
+            <button class="btn btn-primary" id="quickAddGoal">＋ Новая цель</button>
+            <button class="btn btn-ghost" id="quickAddHabit">＋ Новая привычка</button>
+          </div>
+        </div>
+        <div class="hero-visual"></div>
+      </div>
+
+      <div class="section-head">
+        <div>
+          <h2 class="section-title">Сегодня</h2>
+          <p class="section-desc">Ваши активные задачи и метрики</p>
+        </div>
+      </div>
+      <div class="grid-3" id="dashboardStats"></div>
+
+      <div class="section-head">
+        <div>
+          <h2 class="section-title">Быстрые действия</h2>
+          <p class="section-desc">Отметьте выполнение или создайте напоминание</p>
+        </div>
+      </div>
+      <div class="grid-3" id="quickActions">
+        <div class="card" style="cursor:pointer; text-align:center; padding:20px;" id="qaCheckIn">
+          <div style="font-size:24px; margin-bottom:6px;">✅</div>
+          <strong>Отметить привычку</strong>
+          <div style="color:var(--ink-muted); font-size:12px; margin-top:2px;">Записать выполнение</div>
+        </div>
+        <div class="card" style="cursor:pointer; text-align:center; padding:20px;" id="qaNotify">
+          <div style="font-size:24px; margin-bottom:6px;">🔔</div>
+          <strong>Напоминание</strong>
+          <div style="color:var(--ink-muted); font-size:12px; margin-top:2px;">Создать уведомление</div>
+        </div>
+        <div class="card" style="cursor:pointer; text-align:center; padding:20px;" id="qaProgress">
+          <div style="font-size:24px; margin-bottom:6px;">📊</div>
+          <strong>Прогресс</strong>
+          <div style="color:var(--ink-muted); font-size:12px; margin-top:2px;">Посмотреть аналитику</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- GOALS -->
+    <section id="view-goals" class="view">
+      <div class="section-head">
+        <div><h2 class="section-title">Мои цели</h2><p class="section-desc">Долгосрочные задачи и этапы</p></div>
+        <button class="btn btn-primary" id="addGoalBtn">＋ Добавить цель</button>
+      </div>
+      <div class="card" style="margin-bottom:12px; padding:10px; display:flex; gap:8px; align-items:center;">
+        <input type="text" class="input" id="goalSearch" placeholder="Поиск целей..." style="padding:7px 10px; font-size:13px;">
+        <select class="input" id="goalFilter" style="padding:7px 10px; width:auto; font-size:13px;">
+          <option value="all">Все статусы</option>
+          <option value="active">Активные</option>
+          <option value="done">Достигнутые</option>
+          <option value="canceled">Отменённые</option>
+        </select>
+      </div>
+      <div class="item-list" id="goalsList"></div>
+    </section>
+
+    <!-- HABITS -->
+    <section id="view-habits" class="view">
+      <div class="section-head">
+        <div><h2 class="section-title">Привычки</h2><p class="section-desc">Ежедневный трекинг и серии</p></div>
+        <button class="btn btn-primary" id="addHabitBtn">＋ Добавить привычку</button>
+      </div>
+      <div class="card" style="margin-bottom:12px; padding:10px; display:flex; gap:8px; align-items:center;">
+        <input type="text" class="input" id="habitSearch" placeholder="Поиск привычек..." style="padding:7px 10px; font-size:13px;">
+        <select class="input" id="habitFilter" style="padding:7px 10px; width:auto; font-size:13px;">
+          <option value="all">Все</option>
+          <option value="today">На сегодня</option>
+          <option value="done">Выполнено</option>
+          <option value="missed">Пропущено</option>
+        </select>
+      </div>
+      <div class="item-list" id="habitsList"></div>
+    </section>
+
+    <!-- ANALYTICS -->
+    <section id="view-analytics" class="view">
+      <div class="section-head">
+        <div><h2 class="section-title">Прогресс</h2><p class="section-desc">Визуализация вашего прогресса</p></div>
+      </div>
+      <div class="grid-3" style="margin-bottom:16px;">
+        <div class="card" style="text-align:center; padding:20px;">
+          <div style="font-size:36px; font-weight:800; color:var(--primary);" id="analyticsRate">0%</div>
+          <div style="color:var(--ink-muted); font-size:13px;">Общая выполнимость</div>
+        </div>
+        <div class="card" style="text-align:center; padding:20px;">
+          <div style="font-size:36px; font-weight:800;" id="analyticsStreak">0</div>
+          <div style="color:var(--ink-muted); font-size:13px;">Макс. серия дней</div>
+        </div>
+        <div class="card" style="text-align:center; padding:20px;">
+          <div style="font-size:36px; font-weight:800;" id="analyticsLastAction">—</div>
+          <div style="color:var(--ink-muted); font-size:13px;">Последнее действие</div>
+        </div>
+      </div>
+      <div class="card">
+        <h3 style="margin:0 0 12px; font-size:16px;">Прогресс по привычкам</h3>
+        <div id="chart"></div>
+      </div>
+    </section>
+
+    <!-- PROFILE -->
+    <section id="view-profile" class="view">
+      <div class="section-head">
+        <div><h2 class="section-title">Профиль</h2><p class="section-desc">Настройки и история активности</p></div>
+      </div>
+      <div class="profile-card">
+        <div class="card">
+          <div class="profile-header">
+            <div class="avatar" id="profileAvatar">U</div>
+            <div>
+              <h3 style="margin:0;" id="profileName">Гость</h3>
+              <div style="color:var(--ink-muted); font-size:14px;" id="profileEmail">—</div>
+              <div class="badge badge-neutral" id="profileRole" style="margin-top:4px;">Пользователь</div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <h3 style="margin:0 0 8px; font-size:16px;">Журнал активности</h3>
+          <div class="timeline" id="activityLog"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ADMIN -->
+    <section id="view-admin" class="view">
+      <div class="section-head">
+        <div><h2 class="section-title">Администрирование</h2><p class="section-desc">Управление пользователями и аудит</p></div>
+        <button class="btn btn-ghost" id="resetDemoBtn">Сбросить демо</button>
+      </div>
+      <div class="grid-2">
+        <div class="card">
+          <h3 style="margin:0 0 10px; font-size:16px;">Пользователи</h3>
+          <div class="table-wrap">
+            <table id="usersTable">
+              <thead><tr><th>Имя</th><th>Email</th><th>Роль</th></tr></thead>
+              <tbody id="usersList"></tbody>
+            </table>
+          </div>
+        </div>
+        <div class="card">
+          <h3 style="margin:0 0 10px; font-size:16px;">Журнал событий</h3>
+          <div class="timeline" id="auditLog"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div id="toast-container"></div>
+
+  <dialog id="modal">
+    <div class="modal-content">
+      <div class="modal-head">
+        <div><h3 id="modalTitle">Заголовок</h3><p id="modalSubtitle">Подзаголовок</p></div>
+        <button class="icon-btn" id="modalClose">✕</button>
+      </div>
+      <form id="modalForm" class="form-grid"></form>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-ghost" id="modalCancel">Отмена</button>
+        <button type="submit" class="btn btn-primary" id="modalSubmit" form="modalForm" disabled>Сохранить</button>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- TEMPLATES -->
+  <template id="goalTemplate">
+    <div class="field">
+      <label>Название цели</label>
+      <input type="text" name="title" class="input" required placeholder="Например: Выучить английский">
+      <span class="error-msg">Введите название цели</span>
+    </div>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+      <div class="field"><label>Дата начала</label><input type="date" name="startDate" class="input" required></div>
+      <div class="field"><label>Дата окончания</label><input type="date" name="endDate" class="input" required></div>
+    </div>
+    <div class="field"><label>Статус</label>
+      <select name="status" class="input"><option value="active">Активна</option><option value="done">Достигнута</option><option value="canceled">Отменена</option></select>
+    </div>
+    <div class="hint">Укажите реалистичные сроки для лучшего контроля прогресса.</div>
+  </template>
+
+  <template id="habitTemplate">
+    <div class="field">
+      <label>Название привычки</label>
+      <input type="text" name="title" class="input" required placeholder="Например: Читать 20 минут">
+      <span class="error-msg">Введите название привычки</span>
+    </div>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+      <div class="field"><label>Периодичность</label>
+        <select name="period" class="input"><option value="daily">Ежедневно</option><option value="weekly">Еженедельно</option></select>
+      </div>
+      <div class="field"><label>Напоминание</label><input type="time" name="remindAt" class="input"></div>
+    </div>
+    <div class="field"><label>Связанная цель</label><select name="goalId" class="input"></select></div>
+    <div class="hint">Привычка будет отслеживаться в журнале автоматически.</div>
+  </template>
+
+  <template id="authTemplate">
+    <div class="field">
+      <label>Email</label>
+      <input type="email" name="email" class="input" required placeholder="user@example.com">
+      <span class="error-msg">Введите корректный email</span>
+    </div>
+    <div class="field">
+      <label>Пароль</label>
+      <input type="password" name="password" class="input" required placeholder="••••••••">
+      <span class="error-msg">Введите пароль</span>
+    </div>
+    <div class="field" id="nameField" style="display:none;"><label>Имя</label><input type="text" name="name" class="input" placeholder="Ваше имя"></div>
+    <div class="hint" id="authHint">Для входа используйте admin@demo.ru / 1234</div>
+  </template>
+
+
+</body>
+</html>
